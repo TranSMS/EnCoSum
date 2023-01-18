@@ -32,7 +32,7 @@ nl_max_len = 30
 train_num = 69708  # 960
 max_ast_node = 80  # 60
 src_max_length = 300  # 120
-md_max_len = 6
+md_max_len = 5
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
