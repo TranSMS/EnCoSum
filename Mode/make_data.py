@@ -6,12 +6,9 @@ import nltk
 import os
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-
 SOS = 2
 EOS = 1
 PAD = 0
-
-
 def load_nl_data(in_file, nl_max_len,  max_words=50000, sort_by_len=False):
     nl = []
     nl2 = []
