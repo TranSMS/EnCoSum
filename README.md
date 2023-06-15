@@ -1,11 +1,13 @@
 # EnCoSum: Enhanced Semantic Features for Multi-scale Multi-modal Source Code Summarization
 The source code and datasets for the EnCoSum.
 # Datasets
-EnCoSum includes one Java and one Python datasets. If you want to train the model, you must download the datasets.
+EnCoSum includes Java and Python datasets. If you want to train the model, you must download the datasets.
 ## Java dataset
 You can get it on: https://github.com/xing-hu/TL-CodeSum
 ## Python dataset
 You can get it on: https://github.com/EdinburghNLP/code-docstring-corpus
+## CodeXGLUE dataset
+You can get it on: https://github.com/microsoft/CodeXGLUE/tree/main
 # Data process
 EnCoSum uses the [JDK](http://www.eclipse.org/jdt/) compiler to parse java methods as ASTs, and the [Treelib](https://treelib.readthedocs.io/en/latest/) toolkit to prase Python functions as ASTs.  
 ## Get AST
