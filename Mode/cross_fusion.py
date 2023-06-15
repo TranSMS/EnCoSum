@@ -29,6 +29,10 @@ class Multi_model(nn.Module):
         # self.Linear = nn.Linear(768, d_model)
         self.conv1 = nn.Conv1d(max_ast_node, max_ast_node, 1, stride=1)
         self.conv2 = nn.Conv1d(src_max_length, max_ast_node, 1, stride=1)
+        # self.pooling = nn.
+        # self.src_emb = nn.Embedding(src_vocab_size, d_model)
+        # self.pos_emb = PositionalEncoding(d_model)
+        # 
         self.enc_self_attn = ScaledDotProductAttention(d_k)
         # self.layers = nn.ModuleList([EncoderLayer() for _ in range(n_layers)])
 
@@ -43,6 +47,11 @@ class Multi_model(nn.Module):
 
         # enc_self_attns = []
         enc_outputs, enc_self_attn = self.enc_self_attn(gcn_embed1, src_embed1, src_embed1)
+        # for layer in self.layers:
+            # enc_outputs: [batch_size, src_len, d_model], enc_self_attn: [batch_size, n_heads, src_len, src_len]
+            # enc_outputs, enc_self_attn = layer(gcn_embed1, src_embed1)
+            # enc_outputs = enc_outputs # 
+            # enc_self_attns.append(enc_self_attn)
         enc_outputs = enc_outputs + AST_embed
         # print(enc_outputs.shape)
         return enc_outputs
