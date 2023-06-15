@@ -22,7 +22,15 @@ def get_embed(ast_file, max_node):
     # print(papers)
     # exit()
     for ast in papers:
+        ast[0].update({'layer': 0})
+        for a in ast:
+            if 'children' in a:
+                for i in a['children']:
+                    ast[i].update({'layer': a['layer'] + 1})
         # print(ast)
+
+    for ast in papers:
+        print(ast)
         val = []
         for b in ast:
             if 'value' in b.keys():
@@ -30,9 +38,8 @@ def get_embed(ast_file, max_node):
             else:
                 val.append('')
             # print(val)
-    # exit()
-            ty = [b['type'] for b in ast]
-        # # print(ty)
+        ty = [b['type'] for b in ast]
+        # print(ty)
         node = []
         for i in range(0, len(ty)):
             if val[i] != '':
@@ -41,8 +48,13 @@ def get_embed(ast_file, max_node):
             else:
                 node.append(ty[i])
         # print(node)
+        layer = [b['layer'] for b in ast]
+        layer = [str(num) for num in layer]
+
         bc = BertClient()
-        matrix = bc.encode(node)
+        # layer =
+        matrix = bc.encode(node)+bc.encode(layer)
+        # print(type(matrix))
         matrix = np.array(matrix)
         matrix = sp.csr_matrix(matrix, dtype=np.float32)
         feature = torch.FloatTensor(np.array(matrix.todense()))
