@@ -17,9 +17,16 @@ def read_batchA(ast_file, max_node):
 
     for line in file.readlines():
         dic = json.loads(line)
-
         papers.append(dic)
-        id_ch = {t['id']: t['children'] for t in dic if 'children' in t}
+
+    for ast in papers:
+        ast[0].update({'layer': 0})
+        for a in ast:
+            if 'children' in a:
+                for i in a['children']:
+                    ast[i].update({'layer': a['layer'] + 1})
+        # print(ast)
+        id_ch = {t['id']: t['children'] for t in ast if 'children' in t}
         # print(id_ch)
         # exit()
         edgelist = []
@@ -27,34 +34,52 @@ def read_batchA(ast_file, max_node):
             for child in id_ch[id]:
                 # fo.write(str(id)+'\t'+str(child)+'\n')
                 edgelist.append((id, child))
-        # print(edgelist)
         #
-        id_type_for = {d['id']: d['children'] for d in dic if d['type'] == 'ForStatement' and 'children' in d}
-        id_type_block = {w['id']: w['children'] for w in dic if w['type'] == 'BlockStatement' and 'children' in w}
-        id_type_while = {n['id']: n['children'] for n in dic if n['type'] == 'WhileStatement' and 'children' in n}
-        id_type_if = {m['id']: m['children'] for m in dic if m['type'] == 'IfStatement' and 'children' in m}
-        # print(id_type_for)
-        # print(id_type_block)
-        # print(id_type_while)
-        # print(id_type_if)
+        id_type_for = {d['id']: d['children'] for d in ast if d['type'] == 'ForStatement' and 'children' in d}
+        id_type_block = {w['id']: w['children'] for w in ast if w['type'] == 'BlockStatement' and 'children' in w}
+        id_type_while = {n['id']: n['children'] for n in ast if n['type'] == 'WhileStatement' and 'children' in n}
+        id_type_if = {m['id']: m['children'] for m in ast if m['type'] == 'IfStatement' and 'children' in m}
+        non = []
+        for b in ast:
+            if "children" in b:
+                non.append(b["id"])
 
         edgelist = []
         for id in id_ch:
             for child in id_ch[id]:
-                # fo.write(str(id)+'\t'+str(child)+'\n')
                 edgelist.append((id, child))
-        # print(edgelist)
-
         value_list_for = id_type_for.values()
         for_list = list(value_list_for)
+        # 遍历每个字典
+        classified_dict = {}
+        for i, d in enumerate(ast):
+            layer = d['layer']
+            if layer in classified_dict:
+                classified_dict[layer].append(i)
+            else:
+                classified_dict[layer] = [i]
+        # print(classified_dict)
+        add_nub_edges = []
+        for value in classified_dict.values():
+            # print(value)
+            if len(value) > 2:
+                for i in range(len(value) - 1):
+                    xx = (value[i], value[i + 1])
+                    add_nub_edges.append(xx)
+        for k in add_nub_edges:
+            edgelist.append(k)
+        add_non_edges = []
+        for i in range(len(non) - 1):
+            x = (non[i], non[i+1])
+            add_non_edges.append(x)
+        for j in add_non_edges:
+            edgelist.append(j)
         add_for_edges = []
         for v in for_list:
             for_list2 = v
             if len(for_list2) > 0:
                 add_for_edges.append((for_list2[0], for_list2[-1]))
 
-        # print(add_edges)
-        # print(add_for_edges)
         for i in add_for_edges:
             edgelist.append(i)
 
@@ -70,7 +95,6 @@ def read_batchA(ast_file, max_node):
                     # print(k)
                     add_block_edges.append((block_list2[k], block_list2[k + 1]))
 
-        # print(add_block_edges)
         for j in add_block_edges:
             edgelist.append(j)
 
@@ -105,7 +129,6 @@ def read_batchA(ast_file, max_node):
         for m in add_if_edges:
             edgelist.append(m)
 
-
         G = nx.Graph()
         G.add_edges_from(edgelist)
 
@@ -129,13 +152,13 @@ def read_batchA(ast_file, max_node):
         a4 = a.dot(a3)
         a5 = a.dot(a4)
 
-
         A2 = normalize_data(a2)
         A2 = np.array(A2)
         A2 = sparse.csr_matrix(A2)
         A2 = torch.FloatTensor(np.array(A2.todense()))
         # A2 = sparse_mx_to_torch_sparse_tensor(A2)
         aa2.append(A2)
+        # print(aa2)
 
         A3 = normalize_data(a3)
         A3 = np.array(A3)
@@ -184,7 +207,6 @@ def normalize(mx):
     r_mat_inv = sp.diags(r_inv)
     mx = r_mat_inv.dot(mx)
     return mx
-
 
 def normalize_data(data):
     list = []
