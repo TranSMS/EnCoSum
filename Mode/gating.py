@@ -19,6 +19,7 @@ class Gating(nn.Module):
         k1 = self.lh(m_source_code)
         # print(k1.shape)
         k2 = self.embedding(e_method_name)
+        
         k2 = k2.transpose(1, 2)
         k2 = self.l1(k2)
         k2 = k2.transpose(1, 2)
