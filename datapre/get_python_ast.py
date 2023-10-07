@@ -3,7 +3,6 @@ import ast
 import json
 from io import StringIO
 
-
 class global_tree():
     id = 0
     tree = Tree()
@@ -11,7 +10,6 @@ class global_tree():
     def clear(cls):
         cls.id = 0
         cls.tree = Tree()
-
 
 def creat_tree(node):
     from collections import deque
@@ -22,8 +20,6 @@ def creat_tree(node):
         add_main_Node(node)
         for i in ast.iter_child_nodes(node):
             add_Node(i,node)
-
-       # yield node
 
 
 def add_main_Node(node):
@@ -108,7 +104,3 @@ if __name__ == '__main__':
     with open('train_ast.txt', 'w') as f:
         f.write(buf.getvalue())
     buf.close()
-
-# global_tree.tree.show(idhidden=False)
-
-# from _collections import OrderedDict as odict
