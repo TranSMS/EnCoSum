@@ -1,4 +1,4 @@
-# We generate ASTs using the same method as DeepCom.
+# We generate ASTs using the same method as DeepCom. 
 
 import javalang
 import json
